@@ -43,6 +43,7 @@ const App = () => (
                 </PrivateRoute>
               }
             />
+            {/* montring route  */}
             <Route
               path="/dashboard/monitoring"
               element={<RealTimeMonitoring />}
