@@ -50,7 +50,7 @@ export default function AuthPages() {
         "service_s0vy33p",
         "template_ku9xnlg",
         templateParams,
-        "5vsjCvHVuerH6eaHA"
+        "5vsjCvHVuerH6eaHA",
       );
 
       showToast(`OTP sent to ${email}`, "success");
@@ -639,8 +639,8 @@ export default function AuthPages() {
                       emailError
                         ? "error"
                         : email && !emailError
-                        ? "success"
-                        : ""
+                          ? "success"
+                          : ""
                     }`}
                     placeholder="name@company.com"
                     value={email}
@@ -663,8 +663,8 @@ export default function AuthPages() {
                     passwordError
                       ? "error"
                       : password && !passwordError
-                      ? "success"
-                      : ""
+                        ? "success"
+                        : ""
                   }`}
                 >
                   <Lock size={18} className="input-icon" />
@@ -675,8 +675,8 @@ export default function AuthPages() {
                       passwordError
                         ? "error"
                         : password && !passwordError
-                        ? "success"
-                        : ""
+                          ? "success"
+                          : ""
                     }`}
                     placeholder="••••••••"
                     value={password}
@@ -749,8 +749,8 @@ export default function AuthPages() {
                       emailError
                         ? "error"
                         : email && !emailError
-                        ? "success"
-                        : ""
+                          ? "success"
+                          : ""
                     }`}
                     placeholder="name@company.com"
                     value={email}
