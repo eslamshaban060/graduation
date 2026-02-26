@@ -29,9 +29,7 @@ export function Navbar() {
       animate={{ y: 0 }}
       transition={{ duration: 0.6, ease: "easeOut" }}
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
-        isScrolled
-          ? "glass shadow-card py-2"
-          : "bg-transparent py-4"
+        isScrolled ? "glass shadow-card py-2" : "bg-transparent py-4"
       }`}
     >
       <div className="container mx-auto px-6">
@@ -68,17 +66,26 @@ export function Navbar() {
           {/* Actions */}
           <div className="flex items-center gap-2">
             <ThemeToggle />
-            <Button size="sm" className="hidden sm:inline-flex gap-2 gradient-hero border-0 shadow-glow hover:shadow-elevated transition-all duration-300 hover:scale-105 text-primary-foreground">
-              <LogIn className="h-4 w-4" />
-              Sign In
-            </Button>
+            <a href="/login">
+              <Button
+                size="sm"
+                className="hidden sm:inline-flex gap-2 gradient-hero border-0 shadow-glow hover:shadow-elevated transition-all duration-300 hover:scale-105 text-primary-foreground"
+              >
+                <LogIn className="h-4 w-4" />
+                Sign In
+              </Button>
+            </a>
             <Button
               variant="ghost"
               size="icon"
               className="md:hidden"
               onClick={() => setIsOpen(!isOpen)}
             >
-              {isOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+              {isOpen ? (
+                <X className="h-5 w-5" />
+              ) : (
+                <Menu className="h-5 w-5" />
+              )}
             </Button>
           </div>
         </div>
@@ -106,7 +113,10 @@ export function Navbar() {
                     {link.name}
                   </motion.a>
                 ))}
-                <Button size="sm" className="w-full mt-3 gap-2 gradient-hero border-0 text-primary-foreground">
+                <Button
+                  size="sm"
+                  className="w-full mt-3 gap-2 gradient-hero border-0 text-primary-foreground"
+                >
                   <LogIn className="h-4 w-4" />
                   Sign In
                 </Button>
