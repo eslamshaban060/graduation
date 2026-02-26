@@ -1,73 +1,105 @@
-# Welcome to your Lovable project
+# 🚀 Smart Solar Power System – Web & Backend (Graduation Project 2026)
 
-## Project info
+This is the **Web and Backend part** of the **Smart Solar Power System**, our graduation project at **Minia University – Faculty of Engineering, Electrical Department, Communications & Electronics specialization**.
 
-**URL**: https://lovable.dev/projects/f7abbf25-c716-4fc9-acd9-a12024945fdd
+It’s an **intelligent IoT & AI platform** for monitoring and managing solar energy systems.
 
-## How can I edit this code?
+> **Note:** This README focuses on the **web and backend development**, which I fully implemented. Abdelrahman Ahmed assisted by providing the **cloud infrastructure and APIs**, enabling real-time data communication.
 
-There are several ways of editing your application.
+This system is **production-ready**, with a modern **Dark / Light mode**, advanced **dashboard management**, and real-time monitoring data fetched from cloud APIs.
 
-**Use Lovable**
+---
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/f7abbf25-c716-4fc9-acd9-a12024945fdd) and start prompting.
+## 🛠 Tech Stack
 
-Changes made via Lovable will be committed automatically to this repo.
+- **Frontend:** React.js (Vite + TypeScript)
+- **Backend (Web part):** Node.js + Supabase integration for API consumption, authentication, and database management
+- **UI & Design:** Tailwind CSS, shadcn/ui, Dark / Light Mode
+- **Animations & UX:** Framer Motion
+- **State Management:** React Context API
+- **Weather Monitoring:** OpenWeather API integration for solar panels & energy optimization visualization
+- **Notifications & Reports:** Full notification system, notes, and report generation
+- **Other Web Features:** Responsive mobile-first design, performance optimization, SEO-friendly setup
 
-**Use your preferred IDE**
+> ⚠️ **Note:** IoT device hardware, embedded systems, and networking are managed by other team members. My responsibility covers **all frontend and backend integration**.
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+---
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+## ✨ Key Features (Web & Backend)
 
-Follow these steps:
+- 🌞 **Landing Page:** Presents project overview, concept, and data summaries
+- 📊 **Dashboard:** Central web interface to monitor and manage system data
+  - Solar panels monitoring page
+  - Inverters monitoring page
+  - Batteries monitoring page
+  - Summary page (real-time data visualization)
+  - Weather page showing wind, temperature, and other conditions affecting solar efficiency
+  - Integrated **chat bot** to assist admins with dashboard management
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+- 🧑‍💼 **Multi-role Web Access System:** Admin, Engineer, Owner with role-based permissions
+- 🔐 **Complete Login & Authentication System** using Supabase
+- 🔔 **Notifications System:** For alerts, warnings, and updates
+- 📝 **Notes Page:** Write, save, and share notes
+- 📄 **Reports Page:** Create and print web-based reports
+- ⚙️ **Settings Page:** Full control over dashboard data and user interface
+- 🎨 **Dark & Light Mode:** Smooth theme switching across the entire web app
+- 📱 **Responsive Design:** Optimized for desktop and mobile users
+- ⚡ **Optimized Performance:** Fast load times and smooth UI transitions
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+---
 
-# Step 3: Install the necessary dependencies.
-npm i
+## 📌 About My Role
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
-```
+I am **responsible for the full web and backend part** of this project, including:
 
-**Edit a file directly in GitHub**
+- Full **frontend implementation** (landing page + dashboard)
+- **Backend integration** with Supabase for APIs, authentication, notifications, and real-time data
+- **UI design, animations, and component architecture**
+- Implementing **state management** via React Context API
+- Designing **multi-role access control**
+- Integration of **weather API** (OpenWeather) for solar monitoring visualization
+- Dark / Light mode, notifications, and all dashboard interactions
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+**Abdelrahman Ahmed** assisted with **cloud infrastructure and API setup**, enabling seamless communication with embedded devices and IoT hardware.
 
-**Use GitHub Codespaces**
+---
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+## 👥 Team Members
 
-## What technologies are used for this project?
+| Name               | Role                       |
+| ------------------ | -------------------------- |
+| Islam Shaban       | Web & Backend (Full Stack) |
+| Mohamed El-Gioushy | Embedded Systems           |
+| Mohamed Mostafa    | Networks & Security        |
+| Abdelrahman Ahmed  | Cloud & APIs               |
+| Ismail             | Control Systems            |
+| Omar Khaled        | Network Support            |
 
-This project is built with:
+---
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+## 🌍 Live Website
 
-## How can I deploy this project?
+👉 [Project Dashboard](https://graduation-3hje0gfmv-eslamshaban060s-projects.vercel.app/)
 
-Simply open [Lovable](https://lovable.dev/projects/f7abbf25-c716-4fc9-acd9-a12024945fdd) and click on Share -> Publish.
+---
 
-## Can I connect a custom domain to my Lovable project?
+## 📬 Contact
 
-Yes, you can!
+- 📧 Email: [eslamshaban060@gmail.com](mailto:eslamshaban060@gmail.com)
+- 💼 LinkedIn: [https://www.linkedin.com/in/eslamshaban060/](https://www.linkedin.com/in/eslamshaban060/)
+- 🐙 GitHub: [https://github.com/eslamshaban060](https://github.com/eslamshaban060/)
+- 💬 WhatsApp: [https://wa.me/201006407387](https://wa.me/201006407387)
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+---
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+## 🎯 Purpose
+
+The **Smart Solar Web & Backend System** demonstrates my ability to:
+
+- Build **modern, scalable, and responsive full-stack web dashboards**
+- Integrate **cloud APIs and real-time data visualization**
+- Implement **role-based access control** and multi-user permissions
+- Apply **full-stack best practices** including performance, security, and SEO
+- Deliver **production-ready frontend and backend solutions** that interact with IoT and cloud data
+
+This project represents my **commitment to professional full-stack development standards, UI/UX quality, and technical excellence**.

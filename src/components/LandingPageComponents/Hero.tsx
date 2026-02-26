@@ -11,7 +11,11 @@ export function Hero() {
     >
       {/* Background layers */}
       <div className="absolute inset-0 z-0">
-        <img src={heroImage} alt="Solar power system" className="w-full h-full object-cover opacity-20 dark:opacity-10" />
+        <img
+          src={heroImage}
+          alt="Solar power system"
+          className="w-full h-full object-cover opacity-20 dark:opacity-10"
+        />
         <div className="absolute inset-0 gradient-mesh" />
         <div className="absolute inset-0 bg-gradient-to-b from-background via-background/50 to-background" />
       </div>
@@ -30,7 +34,10 @@ export function Hero() {
 
       {/* Glowing orbs */}
       <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/10 rounded-full blur-[120px] animate-pulse" />
-      <div className="absolute bottom-1/4 right-1/4 w-72 h-72 bg-accent/10 rounded-full blur-[100px] animate-pulse" style={{ animationDelay: "1.5s" }} />
+      <div
+        className="absolute bottom-1/4 right-1/4 w-72 h-72 bg-accent/10 rounded-full blur-[100px] animate-pulse"
+        style={{ animationDelay: "1.5s" }}
+      />
 
       {/* Content */}
       <div className="container mx-auto px-6 z-10 relative pt-20">
@@ -42,7 +49,9 @@ export function Hero() {
           >
             <div className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full glass mb-8">
               <div className="w-2 h-2 rounded-full bg-accent animate-pulse" />
-              <span className="text-sm font-medium">Graduation Project 2025</span>
+              <span className="text-sm font-medium">
+                Graduation Project 2026
+              </span>
               <Sparkles className="w-3.5 h-3.5 text-accent" />
             </div>
           </motion.div>
@@ -64,7 +73,8 @@ export function Hero() {
             transition={{ duration: 0.6, delay: 0.3 }}
             className="text-lg md:text-xl text-muted-foreground mb-12 max-w-xl mx-auto leading-relaxed"
           >
-            An intelligent IoT & AI platform for monitoring and optimizing renewable energy systems.
+            An intelligent IoT & AI platform for monitoring and optimizing
+            renewable energy systems.
           </motion.p>
 
           <motion.div
@@ -76,7 +86,11 @@ export function Hero() {
             <Button
               size="lg"
               className="px-8 h-14 text-base gradient-hero border-0 shadow-glow hover:shadow-elevated transition-all duration-500 hover:scale-105 group text-primary-foreground"
-              onClick={() => document.getElementById("about")?.scrollIntoView({ behavior: "smooth" })}
+              onClick={() =>
+                document
+                  .getElementById("about")
+                  ?.scrollIntoView({ behavior: "smooth" })
+              }
             >
               Explore Project
               <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
@@ -85,7 +99,11 @@ export function Hero() {
               size="lg"
               variant="outline"
               className="px-8 h-14 text-base glass hover:bg-primary/10 hover:border-primary/30 transition-all duration-500 hover:scale-105 group"
-              onClick={() => document.getElementById("team")?.scrollIntoView({ behavior: "smooth" })}
+              onClick={() =>
+                document
+                  .getElementById("team")
+                  ?.scrollIntoView({ behavior: "smooth" })
+              }
             >
               <Users className="mr-2 h-5 w-5" />
               Meet the Team
@@ -110,8 +128,13 @@ export function Hero() {
         transition={{ delay: 1.2 }}
         className="absolute bottom-8 left-1/2 -translate-x-1/2"
       >
-        <a href="#about" className="flex flex-col items-center gap-2 text-muted-foreground hover:text-primary transition-colors">
-          <span className="text-xs font-medium tracking-widest uppercase">Scroll</span>
+        <a
+          href="#about"
+          className="flex flex-col items-center gap-2 text-muted-foreground hover:text-primary transition-colors"
+        >
+          <span className="text-xs font-medium tracking-widest uppercase">
+            Scroll
+          </span>
           <ChevronDown className="h-4 w-4 animate-bounce" />
         </a>
       </motion.div>
