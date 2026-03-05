@@ -1,240 +1,9 @@
-const styles = {
-  container: {
-    minHeight: "100vh",
-    backgroundColor: "hsl(0, 0%, 100%)",
-    padding: "24px",
-  },
-  maxWidth: {
-    maxWidth: "896px",
-    margin: "0 auto",
-  },
-  header: {
-    marginBottom: "32px",
-    paddingBottom: "24px",
-    borderBottom: "2px solid hsl(174, 20%, 90%)",
-  },
-  headerContent: {
-    display: "flex",
-    alignItems: "center",
-    gap: "12px",
-    marginBottom: "8px",
-  },
-  bellContainer: {
-    position: "relative",
-  },
-  bellIcon: {
-    width: "32px",
-    height: "32px",
-    color: "hsl(174, 100%, 27%)",
-  },
-  badge: {
-    position: "absolute",
-    top: "-4px",
-    right: "-4px",
-    backgroundColor: "hsl(0, 84.2%, 60.2%)",
-    color: "white",
-    fontSize: "12px",
-    fontWeight: "bold",
-    borderRadius: "50%",
-    width: "20px",
-    height: "20px",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    boxShadow: "0 2px 8px rgba(0, 0, 0, 0.2)",
-  },
-  title: {
-    fontSize: "36px",
-    fontWeight: "bold",
-    color: "hsl(174, 30%, 15%)",
-    margin: 0,
-  },
-  subtitle: {
-    color: "hsl(174, 10%, 45%)",
-    fontSize: "18px",
-    margin: 0,
-  },
-  notificationsList: {
-    display: "flex",
-    flexDirection: "column",
-    gap: "16px",
-  },
-  emptyState: {
-    textAlign: "center",
-    padding: "64px 0",
-    backgroundColor: "hsl(0, 0%, 100%)",
-    borderRadius: "12px",
-    border: "1px solid hsl(174, 20%, 90%)",
-  },
-  emptyIcon: {
-    width: "64px",
-    height: "64px",
-    margin: "0 auto 16px",
-    color: "hsl(174, 10%, 45%)",
-    opacity: 0.5,
-  },
-  emptyText: {
-    color: "hsl(174, 10%, 45%)",
-    fontSize: "18px",
-    margin: 0,
-  },
-  notificationCard: {
-    position: "relative",
-    overflow: "hidden",
-    borderRadius: "12px",
-    border: "1px solid",
-    transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
-    cursor: "pointer",
-  },
-  notificationUnread: {
-    backgroundColor: "hsl(0, 0%, 100%)",
-    borderColor: "hsl(174, 100%, 27%)",
-    boxShadow: "0 4px 12px rgba(0, 0, 0, 0.08)",
-  },
-  notificationRead: {
-    backgroundColor: "hsl(0, 0%, 100%)",
-    borderColor: "hsl(174, 20%, 90%)",
-    opacity: 0.75,
-  },
-  unreadIndicator: {
-    position: "absolute",
-    left: 0,
-    top: 0,
-    bottom: 0,
-    width: "4px",
-    background:
-      "linear-gradient(135deg, hsl(174, 100%, 27%), hsl(174, 85%, 35%))",
-  },
-  cardContent: {
-    padding: "24px",
-    paddingLeft: "32px",
-  },
-  cardInner: {
-    display: "flex",
-    alignItems: "flex-start",
-    gap: "16px",
-  },
-  iconContainer: {
-    flexShrink: 0,
-    width: "48px",
-    height: "48px",
-    borderRadius: "12px",
-    border: "2px solid hsla(174, 100%, 27%, 0.2)",
-    backgroundColor: "hsl(174, 20%, 95%)",
-    color: "hsl(174, 100%, 27%)",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  icon: {
-    width: "20px",
-    height: "20px",
-  },
-  contentSection: {
-    flex: 1,
-    minWidth: 0,
-  },
-  contentHeader: {
-    display: "flex",
-    alignItems: "flex-start",
-    justifyContent: "space-between",
-    gap: "16px",
-    marginBottom: "8px",
-  },
-  notificationTitle: {
-    fontSize: "18px",
-    fontWeight: "600",
-    color: "hsl(174, 30%, 15%)",
-    margin: 0,
-    transition: "color 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
-  },
-  timestamp: {
-    fontSize: "14px",
-    color: "hsl(174, 10%, 45%)",
-    whiteSpace: "nowrap",
-  },
-  actions: {
-    display: "flex",
-    alignItems: "center",
-    gap: "12px",
-    marginTop: "12px",
-  },
-  viewButton: {
-    display: "inline-flex",
-    alignItems: "center",
-    gap: "8px",
-    padding: "8px 16px",
-    background:
-      "linear-gradient(135deg, hsl(174, 100%, 27%), hsl(174, 85%, 35%))",
-    color: "white",
-    borderRadius: "8px",
-    fontWeight: "500",
-    fontSize: "14px",
-    textDecoration: "none",
-    transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
-    border: "none",
-    cursor: "pointer",
-  },
-  arrow: {
-    width: "16px",
-    height: "16px",
-    transition: "transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
-  },
-  deleteButton: {
-    padding: "8px 16px",
-    fontSize: "14px",
-    color: "hsl(0, 84.2%, 60.2%)",
-    backgroundColor: "transparent",
-    border: "1px solid hsl(0, 84.2%, 60.2%)",
-    borderRadius: "8px",
-    transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
-    display: "flex",
-    alignItems: "center",
-    gap: "8px",
-    cursor: "pointer",
-  },
-  deleteIcon: {
-    width: "16px",
-    height: "16px",
-  },
-  hoverOverlay: {
-    position: "absolute",
-    inset: 0,
-    backgroundColor: "hsla(174, 100%, 27%, 0.05)",
-    opacity: 0,
-    transition: "opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
-    pointerEvents: "none",
-  },
-};
-
-// Dark mode styles
-if (
-  window.matchMedia &&
-  window.matchMedia("(prefers-color-scheme: dark)").matches
-) {
-  styles.container.backgroundColor = "hsl(174, 30%, 8%)";
-  styles.title.color = "hsl(174, 10%, 95%)";
-  styles.subtitle.color = "hsl(174, 10%, 65%)";
-  styles.emptyState.backgroundColor = "hsl(174, 25%, 12%)";
-  styles.emptyState.borderColor = "hsl(174, 20%, 22%)";
-  styles.emptyText.color = "hsl(174, 10%, 65%)";
-  styles.notificationUnread.backgroundColor = "hsl(174, 25%, 12%)";
-  styles.notificationUnread.borderColor = "hsl(174, 85%, 45%)";
-  styles.notificationRead.backgroundColor = "hsl(174, 25%, 12%)";
-  styles.notificationRead.borderColor = "hsl(174, 20%, 22%)";
-  styles.iconContainer.backgroundColor = "hsl(174, 20%, 18%)";
-  styles.notificationTitle.color = "hsl(174, 10%, 95%)";
-}
-
-// export default NotificationsPage;
 import React, { useEffect, useState } from "react";
-import { Bell, Trash2 } from "lucide-react";
+import { Bell, Trash2, Check, X } from "lucide-react";
 import { supabase } from "../../lib/supabase ";
-
 const NotificationsPage = () => {
   const [notifications, setNotifications] = useState([]);
 
-  // 🔹 جلب النوتيفيكيشن من Supabase
   const fetchNotifications = async () => {
     const { data, error } = await supabase
       .from("notifiction")
@@ -248,7 +17,7 @@ const NotificationsPage = () => {
           title: n.title,
           link: n.link,
           date: n.created_at,
-          read: false, // لسه مش مخزنة في DB
+          read: false,
         })),
       );
     }
@@ -288,80 +57,110 @@ const NotificationsPage = () => {
   const unreadCount = notifications.length;
 
   return (
-    <div style={styles.container}>
-      <div style={styles.maxWidth}>
+    <div className="min-h-screen bg-background p-6">
+      <div className="max-w-5xl mx-auto flex flex-col gap-6">
         {/* Header */}
-        <div style={styles.header}>
-          <div style={styles.headerContent}>
-            <div style={styles.bellContainer}>
-              <Bell style={styles.bellIcon} />
-              {unreadCount > 0 && (
-                <span style={styles.badge}>{unreadCount}</span>
-              )}
+        <div className="gradient-hero p-6 rounded-xl shadow-glow">
+          <div className="flex justify-between items-center flex-wrap gap-4">
+            <div className="flex items-center gap-4">
+              <div className="w-14 h-14 rounded-xl bg-white/20 flex items-center justify-center relative">
+                <Bell className="w-7 h-7 text-primary-foreground" />
+                {unreadCount > 0 && (
+                  <span className="absolute -top-1 -right-1 bg-accent text-accent-foreground text-xs font-bold rounded-full w-6 h-6 flex items-center justify-center shadow-lg">
+                    {unreadCount}
+                  </span>
+                )}
+              </div>
+              <div>
+                <h1 className="text-2xl font-semibold text-primary-foreground">
+                  Notifications
+                </h1>
+                <p className="text-sm text-primary-foreground/90 mt-1">
+                  Stay updated with your solar panel system
+                </p>
+              </div>
             </div>
-            <h1 style={styles.title}>Notifications</h1>
+            {unreadCount > 0 && (
+              <div className="px-4 py-2 bg-white/20 text-primary-foreground rounded-full text-sm font-medium">
+                {unreadCount} New{" "}
+                {unreadCount === 1 ? "Notification" : "Notifications"}
+              </div>
+            )}
           </div>
-          <p style={styles.subtitle}>
-            Stay updated with your solar panel system status
-          </p>
         </div>
 
         {/* Notifications List */}
-        <div style={styles.notificationsList}>
-          {notifications.length === 0 ? (
-            <div style={styles.emptyState}>
-              <Bell style={styles.emptyIcon} />
-              <p style={styles.emptyText}>No notifications found</p>
+        {notifications.length === 0 ? (
+          <div className="flex flex-col items-center justify-center py-20 gradient-card rounded-xl border border-border shadow-card">
+            <div className="w-20 h-20 rounded-full bg-muted flex items-center justify-center mb-4">
+              <Bell className="w-10 h-10 text-muted-foreground opacity-50" />
             </div>
-          ) : (
-            notifications.map((notification) => (
+            <h3 className="text-lg font-semibold text-foreground mb-2">
+              No Notifications
+            </h3>
+            <p className="text-muted-foreground text-sm">
+              You're all caught up! Check back later.
+            </p>
+          </div>
+        ) : (
+          <div className="grid gap-4">
+            {notifications.map((notification) => (
               <div
                 key={notification.id}
-                style={{
-                  ...styles.notificationCard,
-                  ...styles.notificationUnread,
-                }}
+                className="group gradient-card rounded-xl border-2 border-primary/30 shadow-card hover-glow transition-smooth overflow-hidden"
               >
-                <div style={styles.unreadIndicator} />
+                <div className="flex">
+                  {/* Left Accent Bar */}
+                  <div className="w-1.5 gradient-hero flex-shrink-0" />
 
-                <div style={styles.cardContent}>
-                  <div style={styles.cardInner}>
-                    <div style={styles.iconContainer}>
-                      <Bell style={styles.icon} />
-                    </div>
-
-                    <div style={styles.contentSection}>
-                      <div style={styles.contentHeader}>
-                        <h3 style={styles.notificationTitle}>
-                          {notification.title}
-                        </h3>
-                        <span style={styles.timestamp}>
-                          {formatDate(notification.date)}
-                        </span>
+                  {/* Content */}
+                  <div className="flex-1 p-5">
+                    <div className="flex items-start gap-4">
+                      {/* Icon */}
+                      <div className="flex-shrink-0 w-12 h-12 rounded-xl gradient-hero flex items-center justify-center shadow-md">
+                        <Bell className="w-6 h-6 text-primary-foreground" />
                       </div>
 
-                      <div style={styles.actions}>
-                        <a href={notification.link} style={styles.viewButton}>
-                          View Details
-                        </a>
+                      {/* Main Content */}
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-start justify-between gap-3 mb-3">
+                          <h3 className="text-base font-semibold text-foreground group-hover:text-primary transition-smooth">
+                            {notification.title}
+                          </h3>
+                          <span className="text-xs text-muted-foreground bg-muted px-2.5 py-1 rounded-full whitespace-nowrap font-medium">
+                            {formatDate(notification.date)}
+                          </span>
+                        </div>
 
-                        <button
-                          onClick={() => deleteNotification(notification.id)}
-                          style={styles.deleteButton}
-                        >
-                          <Trash2 style={styles.deleteIcon} />
-                          Delete
-                        </button>
+                        {/* Actions */}
+                        <div className="flex items-center gap-2 mt-4">
+                          <a
+                            href={notification.link}
+                            className="inline-flex items-center gap-2 px-4 py-2 gradient-hero text-primary-foreground rounded-lg text-sm font-medium transition-smooth hover:shadow-glow hover-scale"
+                          >
+                            <Check className="w-4 h-4" />
+                            View Details
+                          </a>
+
+                          <button
+                            onClick={() => deleteNotification(notification.id)}
+                            className="inline-flex items-center gap-2 px-4 py-2 bg-destructive/10 text-destructive hover:bg-destructive hover:text-destructive-foreground rounded-lg text-sm font-medium transition-smooth"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                            Delete
+                          </button>
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
 
-                <div style={styles.hoverOverlay} />
+                {/* Hover Overlay */}
+                <div className="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-smooth pointer-events-none" />
               </div>
-            ))
-          )}
-        </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
