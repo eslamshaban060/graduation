@@ -2,6 +2,7 @@ import { ArrowRight, Users, Sparkles, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import heroImage from "@/assets/hero-solar.jpg";
 import { motion } from "framer-motion";
+import { Scroll } from "lucide-react";
 
 export function Hero() {
   return (
@@ -9,83 +10,115 @@ export function Hero() {
       id="home"
       className="relative min-h-screen flex items-center justify-center overflow-hidden"
     >
-      {/* Background layers */}
+      {/* Modern background with image */}
       <div className="absolute inset-0 z-0">
         <img
           src={heroImage}
           alt="Solar power system"
-          className="w-full h-full object-cover opacity-20 dark:opacity-10"
+          className="w-full h-full object-cover opacity-50 dark:opacity-12"
         />
-        <div className="absolute inset-0 gradient-mesh" />
-        <div className="absolute inset-0 bg-gradient-to-b from-background via-background/50 to-background" />
+        <div className="absolute inset-0 bg-gradient-to-b from-background/90 via-background/70 to-background" />
       </div>
 
-      {/* Animated grid */}
-      <div className="absolute inset-0 z-0 overflow-hidden opacity-[0.03] dark:opacity-[0.05]">
-        <div
-          className="absolute inset-0 animate-grid"
+      {/* Subtle animated grid */}
+      <div className="absolute inset-0 z-0 overflow-hidden opacity-[0.07] dark:opacity-[0.05]">
+        <motion.div
+          animate={{
+            backgroundPosition: ["0% 0%", "100% 100%"],
+          }}
+          transition={{
+            duration: 30,
+            repeat: Infinity,
+            ease: "linear",
+          }}
+          className="absolute inset-0"
           style={{
             backgroundImage: `linear-gradient(hsl(var(--primary)) 1px, transparent 1px), linear-gradient(90deg, hsl(var(--primary)) 1px, transparent 1px)`,
             backgroundSize: "60px 60px",
-            height: "200%",
           }}
         />
       </div>
 
-      {/* Glowing orbs */}
-      <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/10 rounded-full blur-[120px] animate-pulse" />
-      <div
-        className="absolute bottom-1/4 right-1/4 w-72 h-72 bg-accent/10 rounded-full blur-[100px] animate-pulse"
-        style={{ animationDelay: "1.5s" }}
+      {/* Elegant glow orbs */}
+      <motion.div
+        animate={{
+          scale: [1, 1.1, 1],
+          opacity: [0.08, 0.15, 0.08],
+        }}
+        transition={{
+          duration: 10,
+          repeat: Infinity,
+          ease: "easeInOut",
+        }}
+        className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary rounded-full blur-[120px]"
+      />
+      <motion.div
+        animate={{
+          scale: [1, 1.2, 1],
+          opacity: [0.06, 0.12, 0.06],
+        }}
+        transition={{
+          duration: 12,
+          repeat: Infinity,
+          ease: "easeInOut",
+          delay: 2,
+        }}
+        className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-accent rounded-full blur-[100px]"
       />
 
       {/* Content */}
       <div className="container mx-auto px-6 z-10 relative pt-20">
         <div className="max-w-4xl mx-auto text-center">
+          {/* Badge */}
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
+            transition={{ duration: 0.5 }}
           >
-            <div className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full glass mb-8">
-              <div className="w-2 h-2 rounded-full bg-accent animate-pulse" />
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-border/40 bg-background/40 backdrop-blur-xl mb-8">
+              <div className="w-1.5 h-1.5 rounded-full bg-accent" />
               <span className="text-sm font-medium">
                 Graduation Project 2026
               </span>
-              <Sparkles className="w-3.5 h-3.5 text-accent" />
+              <Sparkles className="w-3.5 h-3.5 text-accent" strokeWidth={2} />
             </div>
           </motion.div>
 
+          {/* Heading */}
           <motion.h1
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.15 }}
-            className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black mb-8 leading-[0.95] tracking-tight"
+            transition={{ duration: 0.6, delay: 0.1 }}
+            className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold mb-6 leading-[1.1] tracking-tight"
           >
             Smart Solar
             <br />
-            <span className="text-gradient">Power System</span>
+            <span className="bg-clip-text text-transparent bg-gradient-to-r from-primary via-primary-glow to-primary">
+              Power System
+            </span>
           </motion.h1>
 
+          {/* Description */}
           <motion.p
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.3 }}
-            className="text-lg md:text-xl text-muted-foreground mb-12 max-w-xl mx-auto leading-relaxed"
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="text-lg md:text-xl text-muted-foreground mb-10 max-w-2xl mx-auto leading-relaxed"
           >
             An intelligent IoT & AI platform for monitoring and optimizing
             renewable energy systems.
           </motion.p>
 
+          {/* CTA Buttons */}
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.45 }}
-            className="flex flex-col sm:flex-row gap-4 justify-center"
+            transition={{ duration: 0.6, delay: 0.3 }}
+            className="flex flex-col sm:flex-row gap-3 justify-center mb-16"
           >
             <Button
               size="lg"
-              className="px-8 h-14 text-base gradient-hero border-0 shadow-glow hover:shadow-elevated transition-all duration-500 hover:scale-105 group text-primary-foreground"
+              className="px-8 h-14 text-base font-semibold rounded-xl gradient-hero shadow-glow hover:shadow-elevated transition-all duration-300 hover:scale-[1.02] group text-primary-foreground"
               onClick={() =>
                 document
                   .getElementById("about")
@@ -98,7 +131,7 @@ export function Hero() {
             <Button
               size="lg"
               variant="outline"
-              className="px-8 h-14 text-base glass hover:bg-primary/10 hover:border-primary/30 transition-all duration-500 hover:scale-105 group"
+              className="px-8 h-14 text-base font-semibold rounded-xl bg-background/40 backdrop-blur-xl border-border/40 hover:bg-background/60 hover:border-primary/20 transition-all duration-300 hover:text-primary hover:scale-[1.02]"
               onClick={() =>
                 document
                   .getElementById("team")
@@ -110,11 +143,12 @@ export function Hero() {
             </Button>
           </motion.div>
 
+          {/* University info */}
           <motion.p
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: 0.8 }}
-            className="mt-16 text-sm text-muted-foreground"
+            transition={{ delay: 0.5 }}
+            className="text-sm text-muted-foreground"
           >
             Faculty of Engineering • Minia University
           </motion.p>
@@ -122,22 +156,31 @@ export function Hero() {
       </div>
 
       {/* Scroll indicator */}
-      <motion.div
+      {/* <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ delay: 1.2 }}
-        className="absolute bottom-8 left-1/2 -translate-x-1/2"
+        transition={{ delay: 0.8 }}
+        className="absolute bottom-0 left-1/2 -translate-x-1/2"
       >
         <a
           href="#about"
-          className="flex flex-col items-center gap-2 text-muted-foreground hover:text-primary transition-colors"
+          className="flex flex-col items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
         >
-          <span className="text-xs font-medium tracking-widest uppercase">
+          <span className="text-xs tracking-wider uppercase font-medium">
             Scroll
           </span>
-          <ChevronDown className="h-4 w-4 animate-bounce" />
+          <motion.div
+            animate={{ y: [0, 6, 0] }}
+            transition={{
+              duration: 2,
+              repeat: Infinity,
+              ease: "easeInOut",
+            }}
+          >
+            <ChevronDown className="h-4 w-4" strokeWidth={2} />
+          </motion.div>
         </a>
-      </motion.div>
+      </motion.div> */}
     </section>
   );
 }
