@@ -310,12 +310,12 @@ const RESPONSE_TEMPLATES = {
 
     good: (temp, efficiency, loss) =>
       `⚠️ **High Temperature: ${temp}°C**\n\n📊 **Analysis:**\n• Beginning of efficiency decline\n• Each degree above 25°C reduces efficiency by 0.5%\n• Expected loss: ${loss.toFixed(
-        1
+        1,
       )}%\n\n✅ **Recommendations:**\n• Monitor panel temperature\n• Ensure good ventilation\n• Expected efficiency: ${efficiency}%`,
 
     critical: (temp, efficiency, loss) =>
       `🔥 **Warning: Very High Temperature ${temp}°C**\n\n⛔ **Analysis:**\n• Significant efficiency drop\n• Potential long-term panel damage\n• Production loss: ${loss.toFixed(
-        1
+        1,
       )}%\n\n🚨 **Urgent Actions:**\n• Check cooling system\n• Monitor panel condition hourly\n• Consider additional cooling\n• Expected efficiency: ${efficiency}%`,
   },
 
@@ -397,7 +397,7 @@ const SolarChatbot = () => {
     try {
       setLoadingWeather(true);
       const response = await fetch(
-        `https://api.openweathermap.org/data/2.5/weather?lat=${MINYA_LAT}&lon=${MINYA_LON}&appid=${API_KEY}&units=metric`
+        `https://api.openweathermap.org/data/2.5/weather?lat=${MINYA_LAT}&lon=${MINYA_LON}&appid=${API_KEY}&units=metric`,
       );
 
       if (!response.ok) throw new Error("Failed to fetch weather data");
@@ -569,23 +569,23 @@ const SolarChatbot = () => {
       temp >= 10 && temp <= 25
         ? "✅ Excellent"
         : temp > 25 && temp <= 35
-        ? "⚠️ High"
-        : "🔥 Very High";
+          ? "⚠️ High"
+          : "🔥 Very High";
     const windStatus =
       wind < 10 ? "✅ Safe" : wind < 15 ? "⚠️ Monitor" : "🚨 Caution";
     const cloudStatus =
       clouds < 20 ? "☀️ Clear" : clouds < 50 ? "⛅ Partly Cloudy" : "☁️ Cloudy";
 
     return `🌤️ **Current Weather at Minya Solar Farm**\n\n🌡️ **Temperature:** ${temp.toFixed(
-      1
+      1,
     )}°C ${tempStatus}\n💨 **Wind Speed:** ${wind.toFixed(
-      1
+      1,
     )} m/s ${windStatus}\n💧 **Humidity:** ${humidity}%\n${cloudStatus} **Cloud Cover:** ${clouds}%\n☀️ **Solar Irradiance:** ~${irradiance} W/m²\n\n📊 **Overall Assessment:**\n${getOverallAssessment(
       temp,
       wind,
       humidity,
       clouds,
-      irradiance
+      irradiance,
     )}`;
   };
 
@@ -602,17 +602,17 @@ const SolarChatbot = () => {
     const overallEfficiency = Math.min(tempEfficiency, cloudEfficiency);
 
     return `⚡ **Solar Production Analysis**\n\n☀️ **Current Irradiance:** ${irradiance} W/m²\n🌡️ **Temperature Impact:** ${tempEfficiency.toFixed(
-      0
+      0,
     )}% efficiency\n☁️ **Cloud Impact:** ${cloudEfficiency.toFixed(
-      0
+      0,
     )}% efficiency\n\n📈 **Overall Efficiency:** ${overallEfficiency.toFixed(
-      0
+      0,
     )}%\n\n${
       overallEfficiency > 80
         ? "✅ Excellent conditions for solar production!"
         : overallEfficiency > 60
-        ? "📊 Good production expected"
-        : "⚠️ Reduced production due to weather conditions"
+          ? "📊 Good production expected"
+          : "⚠️ Reduced production due to weather conditions"
     }`;
   };
 
@@ -643,7 +643,7 @@ const SolarChatbot = () => {
     } else if (temp >= ranges.excellent.min && temp <= ranges.excellent.max) {
       return RESPONSE_TEMPLATES.temperature.excellent(
         temp,
-        ranges.excellent.efficiency
+        ranges.excellent.efficiency,
       );
     } else if (temp > ranges.excellent.max && temp <= ranges.good.max) {
       const loss = (temp - ranges.excellent.max) * ranges.good.efficiencyLoss;
@@ -651,7 +651,7 @@ const SolarChatbot = () => {
       return RESPONSE_TEMPLATES.temperature.good(
         temp,
         efficiency.toFixed(0),
-        loss
+        loss,
       );
     } else {
       const loss =
@@ -660,7 +660,7 @@ const SolarChatbot = () => {
       return RESPONSE_TEMPLATES.temperature.critical(
         temp,
         efficiency.toFixed(0),
-        loss
+        loss,
       );
     }
   };
@@ -700,7 +700,7 @@ const SolarChatbot = () => {
       return RESPONSE_TEMPLATES.clouds.clear(
         clouds,
         ranges.clear.irradiance,
-        ranges.clear.efficiency
+        ranges.clear.efficiency,
       );
     } else if (
       clouds >= ranges.partlyCloudy.min &&
@@ -709,7 +709,7 @@ const SolarChatbot = () => {
       return RESPONSE_TEMPLATES.clouds.partlyCloudy(
         clouds,
         ranges.partlyCloudy.irradiance,
-        ranges.partlyCloudy.efficiency
+        ranges.partlyCloudy.efficiency,
       );
     } else if (
       clouds > ranges.partlyCloudy.max &&
@@ -718,13 +718,13 @@ const SolarChatbot = () => {
       return RESPONSE_TEMPLATES.clouds.cloudy(
         clouds,
         ranges.cloudy.irradiance,
-        ranges.cloudy.efficiency
+        ranges.cloudy.efficiency,
       );
     } else {
       return RESPONSE_TEMPLATES.clouds.overcast(
         clouds,
         ranges.overcast.irradiance,
-        ranges.overcast.efficiency
+        ranges.overcast.efficiency,
       );
     }
   };
@@ -762,7 +762,7 @@ const SolarChatbot = () => {
     return `☀️ **Solar Panel Information**\n\n📊 **Panel Types:**\n${panels.types
       .map(
         (type) =>
-          `• ${type.name}: ${type.efficiency} efficiency (${type.cost} cost)`
+          `• ${type.name}: ${type.efficiency} efficiency (${type.cost} cost)`,
       )
       .join("\n")}\n\n⚡ **Additional Info:**\n• Lifespan: ${
       panels.lifespan
@@ -786,7 +786,7 @@ const SolarChatbot = () => {
       .join("\n")}\n\n**Yearly:**\n${maint.yearly
       .map((task) => `✓ ${task}`)
       .join(
-        "\n"
+        "\n",
       )}\n\n⚠️ **When to Clean:**\n• Humidity > 80%\n• Strong winds (dust)\n• Noticeable production drop\n• Every 2-4 weeks in desert areas`;
   };
 
@@ -810,7 +810,7 @@ const SolarChatbot = () => {
         (sensor, idx) =>
           `${idx + 1}. **${sensor.name}:** ${sensor.function} (${
             sensor.unit || sensor.accuracy
-          })`
+          })`,
       )
       .join("\n")}\n\n🎛️ **Controllers:**\n${hw.controllers
       .map((c) => `• ${c}`)
