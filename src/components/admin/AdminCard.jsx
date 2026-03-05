@@ -11,21 +11,7 @@ const AdminCard = ({ admin, onDelete }) => {
     <div className="gradient-card rounded-xl p-6 border border-border shadow-card hover-scale transition-smooth">
       {/* Avatar & Role */}
       <div className="flex items-start justify-between mb-4">
-        {/* <div className="w-14 h-14 rounded-full gradient-hero flex items-center justify-center text-primary-foreground font-bold text-xl shadow-glow">
-          {admin.name.charAt(0)}
-        </div> */}
         <div className="w-14 h-14 rounded-full gradient-hero flex items-center justify-center text-primary-foreground font-bold text-xl shadow-glow overflow-hidden">
-          {/* {admin.imageBase64 ? (
-            <img
-              src={admin.imageBase64}
-              alt={admin.name}
-              className="w-full h-full object-cover"
-            />
-          ) : (
-            <span className="w-12 h-12 flex items-center justify-center">
-              {admin.name.charAt(0).toUpperCase()}
-            </span>
-          )} */}
           {admin.imageBase64 ? (
             <img
               src={getImageSrc(admin.imageBase64)}
