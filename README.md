@@ -13,7 +13,7 @@ This system is **production-ready**, with a modern **Dark / Light mode**, advanc
 ## 🛠 Tech Stack
 
 - **Frontend:** React.js (Vite + TypeScript)
-- **Backend (Web part):** Node.js + Supabase integration for API consumption, authentication, and database management
+- **Backend (Web part):** Supabase integration for API consumption, authentication, and database management
 - **UI & Design:** Tailwind CSS, shadcn/ui, Dark / Light Mode
 - **Animations & UX:** Framer Motion
 - **State Management:** React Context API
