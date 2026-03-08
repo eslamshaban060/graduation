@@ -4,6 +4,7 @@ import { About } from "@/components/LandingPageComponents/About";
 import { SystemFlow } from "@/components/LandingPageComponents/SystemFlow";
 import { Team } from "@/components/LandingPageComponents/Team";
 import { Features } from "@/components/LandingPageComponents/Features";
+import { Contact } from "@/components/LandingPageComponents/Contact";
 import { Footer } from "@/components/LandingPageComponents/Footer";
 
 const Landing = () => {
@@ -15,6 +16,7 @@ const Landing = () => {
       <SystemFlow />
       <Team />
       <Features />
+      <Contact />
       <Footer />
     </div>
   );
