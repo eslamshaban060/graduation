@@ -44,7 +44,9 @@ export function Footer() {
 
               {/* Quick Links */}
               <div>
-                <h4 className="font-bold text-sm uppercase tracking-widest mb-4 text-primary">Quick Links</h4>
+                <h4 className="font-bold text-sm uppercase tracking-widest mb-4 text-primary">
+                  Quick Links
+                </h4>
                 <div className="space-y-2">
                   {navLinks.map((link) => (
                     <a
@@ -60,7 +62,9 @@ export function Footer() {
 
               {/* Connect */}
               <div>
-                <h4 className="font-bold text-sm uppercase tracking-widest mb-4 text-primary">Connect</h4>
+                <h4 className="font-bold text-sm uppercase tracking-widest mb-4 text-primary">
+                  Connect
+                </h4>
                 <div className="flex gap-3">
                   {socialLinks.map((link, i) => (
                     <a
@@ -86,10 +90,11 @@ export function Footer() {
             {/* Bottom */}
             <div className="pt-8 border-t border-border flex flex-col sm:flex-row items-center justify-between gap-4">
               <p className="text-xs text-muted-foreground">
-                © {new Date().getFullYear()} Smart Solar Team. All rights reserved.
+                © {new Date().getFullYear()} Smart Solar Team. All rights
+                reserved.
               </p>
               <p className="text-xs text-muted-foreground flex items-center gap-1">
-                Made with <Heart className="h-3 w-3 text-destructive fill-destructive" /> by Engineering Students
+                Made by Eslam Shaban
               </p>
             </div>
           </div>
