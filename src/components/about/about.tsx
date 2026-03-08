@@ -906,13 +906,6 @@ const SolarChatbot = () => {
               </div>
             </div>
             <div className="flex items-center gap-2">
-              <button
-                onClick={exportKnowledgeBase}
-                className="p-2 bg-white/20 rounded-lg hover:bg-white/30 transition-smooth"
-                title="Export Knowledge Base"
-              >
-                <Download className="w-5 h-5" />
-              </button>
               {!loadingWeather && (
                 <button
                   onClick={fetchWeatherData}

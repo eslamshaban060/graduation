@@ -13,12 +13,14 @@ import {
   Lock,
   Eye,
   EyeOff,
+  Loader2,
 } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { supabase } from "../../lib/supabase ";
 
 const UserSetting = () => {
   const { user: authUser } = useAuth();
+  const [isLoading, setIsLoading] = useState(true);
   const [isEditing, setIsEditing] = useState(false);
   const [showPasswordSection, setShowPasswordSection] = useState(false);
   const [showCurrentPassword, setShowCurrentPassword] = useState(false);
@@ -58,38 +60,49 @@ const UserSetting = () => {
   // جلب البيانات من Supabase
   useEffect(() => {
     const fetchUser = async () => {
-      if (!authUser?.id) return;
-
-      const { data, error } = await supabase
-        .from("admins")
-        .select("*")
-        .eq("id", authUser.id)
-        .single();
-
-      if (error) {
-        showToast("Failed to load user data", "error");
-        console.error(error);
+      if (!authUser?.id) {
+        setIsLoading(false);
         return;
       }
 
-      setUserData({
-        id: data.id,
-        name: data.name,
-        email: data.email,
-        phone: data.phone,
-        role: data.role,
-        joinDate: data.created_at,
-        lastLogin: data.lastLogin || "",
-        password: data.password,
-        imageBase64: data.imageBase64,
-      });
+      try {
+        setIsLoading(true);
+        const { data, error } = await supabase
+          .from("admins")
+          .select("*")
+          .eq("id", authUser.id)
+          .single();
 
-      setFormData({
-        name: data.name,
-        phone: data.phone,
-      });
+        if (error) {
+          showToast("Failed to load user data", "error");
+          console.error(error);
+          return;
+        }
 
-      setProfileImage(data.imageBase64 || null);
+        setUserData({
+          id: data.id,
+          name: data.name,
+          email: data.email,
+          phone: data.phone,
+          role: data.role,
+          joinDate: data.created_at,
+          lastLogin: data.lastLogin || "",
+          password: data.password,
+          imageBase64: data.imageBase64,
+        });
+
+        setFormData({
+          name: data.name,
+          phone: data.phone,
+        });
+
+        setProfileImage(data.imageBase64 || null);
+      } catch (err) {
+        console.error("Error fetching user:", err);
+        showToast("An error occurred while loading data", "error");
+      } finally {
+        setIsLoading(false);
+      }
     };
 
     fetchUser();
@@ -120,10 +133,11 @@ const UserSetting = () => {
 
     const reader = new FileReader();
     reader.onloadend = () => {
-      setTempImage(reader.result); // صورة مؤقتة
+      setTempImage(reader.result);
     };
     reader.readAsDataURL(file);
   };
+
   const handleSaveImage = async () => {
     if (!tempImage) return;
 
@@ -138,7 +152,7 @@ const UserSetting = () => {
       showToast("Failed to save image", "error");
       console.error(error);
     } else {
-      setProfileImage(tempImage); // الصورة الرسمية
+      setProfileImage(tempImage);
       setTempImage(null);
       showToast("Profile image saved successfully!", "success");
     }
@@ -189,7 +203,6 @@ const UserSetting = () => {
       return;
     }
 
-    // تحديث البيانات في Supabase
     const { error } = await supabase
       .from("admins")
       .update({ name: formData.name, phone: formData.phone })
@@ -217,7 +230,6 @@ const UserSetting = () => {
       return;
     }
 
-    // تحديث الباسورد في Supabase
     const { error } = await supabase
       .from("admins")
       .update({ password: passwordData.newPassword })
@@ -263,6 +275,22 @@ const UserSetting = () => {
     Admin: "bg-primary/20 text-primary-glow border-primary/40",
     Engineer: "bg-accent/10 text-accent border-accent/30",
   };
+
+  // Loading State
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center p-4">
+        <div className="text-center space-y-4">
+          {/* Simple spinner */}
+          <div className="w-12 h-12 mx-auto">
+            <div className="w-12 h-12 border-4 border-primary/20 border-t-primary rounded-full animate-spin" />
+          </div>
+          <p className="text-sm text-muted-foreground">Loading...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-background p-4 md:p-6">
       <div className="max-w-4xl mx-auto space-y-6">
@@ -275,8 +303,8 @@ const UserSetting = () => {
                 toast.type === "success"
                   ? "bg-primary/10 border-primary/30 text-primary"
                   : toast.type === "error"
-                  ? "bg-destructive/10 border-destructive/30 text-destructive"
-                  : "bg-accent/10 border-accent/30 text-accent"
+                    ? "bg-destructive/10 border-destructive/30 text-destructive"
+                    : "bg-accent/10 border-accent/30 text-accent"
               }`}
             >
               {toast.type === "success" ? (
@@ -322,7 +350,7 @@ const UserSetting = () => {
             <div className="relative">
               <div
                 style={{ width: "150px", height: "150px" }}
-                className=" rounded-full gradient-hero flex items-center justify-center shadow-glow overflow-hidden"
+                className="rounded-full gradient-hero flex items-center justify-center shadow-glow overflow-hidden"
               >
                 {profileImage ? (
                   <img
@@ -340,9 +368,13 @@ const UserSetting = () => {
                 <button
                   onClick={handleSaveImage}
                   disabled={isSavingImage}
-                  className="mt-4 px-6 py-2 gradient-hero text-primary-foreground rounded-lg font-semibold hover-glow transition-smooth flex items-center gap-2"
+                  className="mt-4 px-6 py-2 gradient-hero text-primary-foreground rounded-lg font-semibold hover-glow transition-smooth flex items-center gap-2 disabled:opacity-50"
                 >
-                  <Save className="w-4 h-4" />
+                  {isSavingImage ? (
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                  ) : (
+                    <Save className="w-4 h-4" />
+                  )}
                   {isSavingImage ? "Saving..." : "Save Image"}
                 </button>
               )}
@@ -552,7 +584,7 @@ const UserSetting = () => {
                   <button
                     type="button"
                     onClick={() => setShowCurrentPassword(!showCurrentPassword)}
-                    className="absolute left-4 top-1/2 transform -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                    className="absolute right-4 top-1/2 transform -translate-y-1/2 text-muted-foreground hover:text-foreground"
                   >
                     {showCurrentPassword ? (
                       <EyeOff className="w-5 h-5" />
@@ -590,7 +622,7 @@ const UserSetting = () => {
                   <button
                     type="button"
                     onClick={() => setShowNewPassword(!showNewPassword)}
-                    className="absolute left-4 top-1/2 transform -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                    className="absolute right-4 top-1/2 transform -translate-y-1/2 text-muted-foreground hover:text-foreground"
                   >
                     {showNewPassword ? (
                       <EyeOff className="w-5 h-5" />
@@ -628,7 +660,7 @@ const UserSetting = () => {
                   <button
                     type="button"
                     onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                    className="absolute left-4 top-1/2 transform -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                    className="absolute right-4 top-1/2 transform -translate-y-1/2 text-muted-foreground hover:text-foreground"
                   >
                     {showConfirmPassword ? (
                       <EyeOff className="w-5 h-5" />

@@ -205,31 +205,29 @@ const SectionHeader = ({
 const ChartTip = ({ active, payload, label }) => {
   if (!active || !payload?.length) return null;
   return (
-    <DashboardLayout>
-      <div
-        className="rounded-xl px-3 py-2.5 text-xs space-y-1"
-        style={{
-          background: "hsl(var(--card))",
-          border: "1px solid hsl(var(--border))",
-          boxShadow: "var(--shadow-card)",
-        }}
-      >
-        <p className="text-muted-foreground font-medium mb-1">{label}</p>
-        {payload.map((p) => (
-          <p key={p.name} className="flex items-center gap-2">
-            <span
-              className="w-2 h-2 rounded-full shrink-0"
-              style={{ background: p.color }}
-            />
-            <span className="text-muted-foreground">{p.name}:</span>
-            <span className="font-bold text-foreground">
-              {p.value}
-              {p.unit ?? ""}
-            </span>
-          </p>
-        ))}
-      </div>
-    </DashboardLayout>
+    <div
+      className="rounded-xl px-3 py-2.5 text-xs space-y-1"
+      style={{
+        background: "hsl(var(--card))",
+        border: "1px solid hsl(var(--border))",
+        boxShadow: "var(--shadow-card)",
+      }}
+    >
+      <p className="text-muted-foreground font-medium mb-1">{label}</p>
+      {payload.map((p) => (
+        <p key={p.name} className="flex items-center gap-2">
+          <span
+            className="w-2 h-2 rounded-full shrink-0"
+            style={{ background: p.color }}
+          />
+          <span className="text-muted-foreground">{p.name}:</span>
+          <span className="font-bold text-foreground">
+            {p.value}
+            {p.unit ?? ""}
+          </span>
+        </p>
+      ))}
+    </div>
   );
 };
 
