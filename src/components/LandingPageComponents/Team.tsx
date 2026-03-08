@@ -1,194 +1,191 @@
-import {
-  GraduationCap,
-  Code,
-  Network,
-  Shield,
-  Cloud,
-  Cpu,
-  Gauge,
-} from "lucide-react";
 import { motion } from "framer-motion";
+import { Crown } from "lucide-react";
+
+import islamImg from "@/assets/islam.jpg";
+import gioushy from "@/assets/gioushy.jpg";
+import mostafa from "@/assets/mostafa.jpg";
+import abdelrahman from "@/assets/abdelrahman.jpg";
+import ismailImg from "@/assets/ismail.jpg";
 
 const fadeUp = {
-  hidden: { opacity: 0, y: 30 },
+  hidden: { opacity: 0, y: 40 },
   visible: (i: number) => ({
     opacity: 1,
     y: 0,
-    transition: { duration: 0.6, delay: i * 0.1, ease: [0.22, 1, 0.36, 1] },
+    transition: { duration: 0.6, delay: i * 0.12, ease: "easeOut" as const },
   }),
+};
+
+const scaleIn = {
+  hidden: { opacity: 0, scale: 0.8 },
+  visible: {
+    opacity: 1,
+    scale: 1,
+    transition: { duration: 0.7, ease: "easeOut" as const },
+  },
 };
 
 export function Team() {
   const supervisor = {
     name: "Dr. Mona Said",
-    title: "Project Supervisor",
-    department: "Faculty of Engineering, Minia University",
+    role: "Project Supervisor",
+    initials: "MS",
   };
 
   const members = [
-    {
-      name: "Eslam Shaba Gomah",
-      role: "Web Development",
-      icon: Code,
-      gradient: "from-blue-500 to-cyan-500",
-    },
-    {
-      name: "Mohamed El-Gioushy",
-      role: "Embedded Systems",
-      icon: Cpu,
-      gradient: "from-purple-500 to-pink-500",
-    },
-    {
-      name: "Mohamed Mostafa",
-      role: "Security & Networks",
-      icon: Shield,
-      gradient: "from-green-500 to-emerald-500",
-    },
-    {
-      name: "Omar Khaled Mohamed",
-      role: "Network Systems",
-      icon: Network,
-      gradient: "from-orange-500 to-red-500",
-    },
-    {
-      name: "Abdelrahman Ahmed",
-      role: "Cloud & Networks",
-      icon: Cloud,
-      gradient: "from-indigo-500 to-blue-500",
-    },
-    {
-      name: "Ismail Mohamed Hassan",
-      role: "Control Systems",
-      icon: Gauge,
-      gradient: "from-yellow-500 to-orange-500",
-    },
+    { name: "Islam Shaban", role: "Web & Networks", image: islamImg },
+    { name: "Mohamed El-Gioushy", role: "Embedded Systems", initials: "Mg" },
+    { name: "Mohamed Mostafa", role: "Networks & Security", initials: "Mm" },
+    { name: "Abdelrahman Ahmed", role: "Cloud & Networks", image: abdelrahman },
+    { name: "Ismail Mohamed", role: "Control Systems", initials: "Im" },
+    { name: "Omar Khaled", role: "Networks", initials: "Ok" },
   ];
 
   return (
-    <section id="team" className="py-20 md:py-28 relative overflow-hidden">
-      {/* Background */}
-      <div className="absolute inset-0 bg-gradient-to-b from-background via-muted/30 to-background" />
+    <section id="team" className="py-32 relative overflow-hidden">
+      <div className="absolute inset-0 gradient-mesh pointer-events-none" />
 
       <div className="container mx-auto px-6 relative z-10">
-        <div className="max-w-6xl mx-auto">
-          {/* Section header */}
-          <motion.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            className="text-center mb-12 md:mb-16"
+        {/* Header */}
+        <motion.div
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+          className="text-center mb-16"
+        >
+          <motion.span
+            variants={fadeUp}
+            custom={0}
+            className="inline-block text-sm font-semibold text-primary tracking-widest uppercase mb-4"
           >
-            <motion.span
-              variants={fadeUp}
-              custom={0}
-              className="inline-block text-sm font-semibold text-primary mb-3"
-            >
-              THE TEAM
-            </motion.span>
-            <motion.h2
-              variants={fadeUp}
-              custom={1}
-              className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4"
-            >
-              Meet the{" "}
-              <span className="bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary">
-                Innovators
-              </span>
-            </motion.h2>
-          </motion.div>
-
-          {/* Supervisor Card */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            className="mb-12 md:mb-16"
+            Our Team
+          </motion.span>
+          <motion.h2
+            variants={fadeUp}
+            custom={1}
+            className="text-4xl md:text-5xl font-black mb-4"
           >
-            <div className="relative max-w-2xl mx-auto">
-              <div className="absolute -inset-4 bg-gradient-to-r from-primary/20 via-primary-glow/20 to-primary/20 rounded-3xl" />
-              <div className="relative p-6 md:p-8 rounded-2xl bg-card/80 backdrop-blur-sm border border-border/50 shadow-xl">
-                <div className="flex flex-col md:flex-row items-center gap-6">
-                  {/* Icon instead of image */}
-                  <div className="relative">
-                    <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-primary to-primary-glow blur-xl opacity-50" />
-                    <div className="relative w-20 h-20 md:w-24 md:h-24 rounded-2xl bg-gradient-to-br from-primary to-primary-glow flex items-center justify-center shadow-glow">
-                      <GraduationCap
-                        className="w-10 h-10 md:w-12 md:h-12 text-primary-foreground"
-                        strokeWidth={2}
-                      />
-                    </div>
-                  </div>
+            Meet Our Team
+          </motion.h2>
+          <motion.div
+            variants={fadeUp}
+            custom={2}
+            className="w-20 h-1 gradient-hero rounded-full mx-auto"
+          />
+        </motion.div>
 
-                  {/* Info */}
-                  <div className="flex-1 text-center md:text-left">
-                    <div className="inline-block px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-semibold mb-2">
-                      SUPERVISOR
-                    </div>
-                    <h3 className="text-xl md:text-2xl font-bold mb-1">
-                      {supervisor.name}
-                    </h3>
-                    <p className="text-sm md:text-base text-muted-foreground mb-1">
-                      {supervisor.title}
-                    </p>
-                    <p className="text-xs md:text-sm text-muted-foreground/80">
-                      {supervisor.department}
-                    </p>
-                  </div>
+        {/* Supervisor - Featured Card */}
+        <motion.div
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+          variants={scaleIn}
+          className="max-w-md mx-auto mb-8"
+        >
+          <div className="relative p-1 rounded-3xl gradient-hero shadow-glow">
+            <div className="relative rounded-3xl bg-card p-8 text-center overflow-hidden">
+              {/* Crown badge */}
+              <div className="absolute top-4 right-4">
+                <div className="w-10 h-10 rounded-full gradient-accent flex items-center justify-center shadow-lg">
+                  <Crown className="h-5 w-5 text-accent-foreground" />
                 </div>
               </div>
-            </div>
-          </motion.div>
 
-          {/* Team Members Grid */}
-          <motion.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6"
-          >
-            {members.map((member, i) => (
-              <motion.div
-                key={i}
-                variants={fadeUp}
-                custom={i + 3}
-                whileHover={{ y: -8, scale: 1.02 }}
-                className="group relative"
-              >
-                <div className="relative p-5 md:p-6 rounded-xl md:rounded-2xl bg-card/50 backdrop-blur-sm border border-border/50 hover:border-primary/30 hover:bg-card/80 hover:shadow-xl transition-all duration-300">
-                  {/* Icon with gradient */}
-                  <div
-                    className={`relative w-14 h-14 md:w-16 md:h-16 mx-auto mb-4 rounded-xl md:rounded-2xl bg-gradient-to-br ${member.gradient} flex items-center justify-center shadow-lg group-hover:shadow-xl group-hover:scale-110 transition-all duration-300`}
-                  >
-                    <member.icon
-                      className="w-7 h-7 md:w-8 md:h-8 text-white"
-                      strokeWidth={2}
-                    />
-                  </div>
-
-                  {/* Info */}
-                  <div className="text-center">
-                    <h3 className="font-bold text-sm md:text-base mb-1.5">
-                      {member.name}
-                    </h3>
-                    <p className="text-xs md:text-sm text-muted-foreground">
-                      {member.role}
-                    </p>
-                  </div>
-
-                  {/* Bottom accent line */}
-                  <motion.div
-                    initial={{ scaleX: 0 }}
-                    whileInView={{ scaleX: 1 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: 0.5 + i * 0.1, duration: 0.5 }}
-                    className={`absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r ${member.gradient} rounded-b-xl md:rounded-b-2xl`}
-                  />
+              {/* Initials Avatar */}
+              <div className="relative w-36 h-36 mx-auto mb-5">
+                <div className="absolute -inset-1 rounded-full gradient-hero opacity-30 blur-md animate-pulse-glow" />
+                <div className="relative w-36 h-36 rounded-full gradient-hero flex items-center justify-center border-4 border-primary/20">
+                  <span className="text-3xl font-black text-primary-foreground">
+                    {supervisor.initials}
+                  </span>
                 </div>
-              </motion.div>
-            ))}
-          </motion.div>
-        </div>
+              </div>
+
+              <span className="inline-block text-xs font-bold text-primary tracking-widest uppercase mb-2">
+                Supervisor
+              </span>
+              <h3 className="text-2xl font-black mb-1">{supervisor.name}</h3>
+              <p className="text-sm text-muted-foreground">{supervisor.role}</p>
+
+              {/* Decorative line */}
+              <div className="mt-5 flex items-center justify-center gap-2">
+                <div className="h-px w-12 gradient-hero opacity-50" />
+                <div className="w-2 h-2 rounded-full gradient-hero" />
+                <div className="h-px w-12 gradient-hero opacity-50" />
+              </div>
+            </div>
+          </div>
+        </motion.div>
+
+        {/* Connecting line */}
+        <motion.div
+          initial={{ scaleY: 0 }}
+          whileInView={{ scaleY: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5, delay: 0.3 }}
+          className="w-px h-16 gradient-hero mx-auto origin-top opacity-40"
+        />
+
+        {/* Team label */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.8 }}
+          whileInView={{ opacity: 1, scale: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.4, delay: 0.5 }}
+          className="text-center mb-8"
+        >
+          <span className="inline-block px-5 py-2 rounded-full glass-card text-xs font-bold text-primary tracking-widest uppercase">
+            Team Members
+          </span>
+        </motion.div>
+
+        {/* Team Grid - 3 columns on md for 6 members */}
+        <motion.div
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-50px" }}
+          className="grid grid-cols-2 md:grid-cols-3 gap-5 max-w-4xl mx-auto"
+        >
+          {members.map((member, i) => (
+            <motion.div
+              key={i}
+              variants={fadeUp}
+              custom={i + 2}
+              className="group"
+            >
+              <div className="relative rounded-2xl glass-card p-5 text-center hover:shadow-elevated hover:-translate-y-3 transition-all duration-500 cursor-pointer overflow-hidden">
+                <div className="absolute inset-0 gradient-hero opacity-0 group-hover:opacity-[0.04] transition-opacity duration-500" />
+
+                <div className="relative z-10">
+                  {/* Photo or Initials */}
+                  <div className="relative w-20 h-20 mx-auto mb-4">
+                    <div className="absolute -inset-1 rounded-full gradient-hero opacity-0 group-hover:opacity-30 blur-md transition-opacity duration-500" />
+                    {"image" in member && member.image ? (
+                      <img
+                        src={member.image}
+                        alt={member.name}
+                        className="relative w-20 h-20 rounded-full object-cover border-2 border-border group-hover:border-primary/40 transition-colors duration-500"
+                      />
+                    ) : (
+                      <div className="relative w-20 h-20 rounded-full gradient-hero flex items-center justify-center border-2 border-primary/20 group-hover:scale-110 transition-transform duration-500">
+                        <span className="text-xl font-bold text-primary-foreground">
+                          {"initials" in member ? member.initials : ""}
+                        </span>
+                      </div>
+                    )}
+                  </div>
+
+                  <h3 className="font-bold text-sm mb-1 group-hover:text-primary transition-colors duration-300">
+                    {member.name}
+                  </h3>
+                  <p className="text-xs text-muted-foreground">{member.role}</p>
+
+                  <div className="h-0.5 w-0 group-hover:w-10 gradient-hero rounded-full transition-all duration-500 mx-auto mt-3" />
+                </div>
+              </div>
+            </motion.div>
+          ))}
+        </motion.div>
       </div>
     </section>
   );
