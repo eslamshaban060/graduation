@@ -52,7 +52,7 @@ export function Contact() {
   const contactInfo = [
     { icon: Mail, label: "Email", value: targetEmail },
     { icon: MapPin, label: "Location", value: "Minia University, Egypt" },
-    { icon: Phone, label: "Phone", value: "+20 123 456 7890" },
+    { icon: Phone, label: "Phone", value: "+20 100 640 7387" },
   ];
 
   return (
