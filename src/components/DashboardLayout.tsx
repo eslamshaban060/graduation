@@ -21,33 +21,11 @@ import {
 } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useAuth } from "@/context/AuthContext";
-
+import { supabase } from "../lib/supabase ";
+import { useEffect } from "react";
 interface DashboardLayoutProps {
   children: ReactNode;
 }
-
-const navItems = [
-  { icon: LayoutDashboard, label: "Overview", path: "/dashboard" },
-  {
-    icon: Activity,
-    label: "Real-Time Monitoring",
-    path: "/dashboard/monitoring",
-  },
-  { icon: Zap, label: "Inverters & Controllers", path: "/dashboard/inverters" },
-  { icon: Battery, label: "Battery Management", path: "/dashboard/battery" },
-  { icon: CloudSun, label: "Weather Station", path: "/dashboard/weather" },
-  {
-    icon: Bell,
-    label: "Alarms & Notifications",
-    path: "/dashboard/alarms",
-    badge: 3,
-  },
-  { icon: FileText, label: "Reports & Analytics", path: "/dashboard/reports" },
-  { icon: Shield, label: "Admin Management", path: "/dashboard/admin" },
-  { icon: Wrench, label: "Maintenance Logs", path: "/dashboard/maintenance" },
-  { icon: Settings, label: "Settings", path: "/dashboard/settings" },
-  { icon: Info, label: "About / Help", path: "/dashboard/about" },
-];
 
 const DashboardLayout = ({ children }: DashboardLayoutProps) => {
   const navigate = useNavigate();
@@ -55,7 +33,70 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
   const { theme, setTheme } = useTheme();
   const { user } = useAuth();
   const [open, setOpen] = useState(true);
+  const [notifications, setNotifications] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const unreadCount = notifications.length;
 
+  const fetchNotifications = async () => {
+    try {
+      setIsLoading(true);
+      const { data, error } = await supabase
+        .from("notifiction")
+        .select("*")
+        .order("created_at", { ascending: false });
+
+      if (!error) {
+        setNotifications(
+          data.map((n) => ({
+            id: n.id,
+            title: n.title,
+            link: n.link,
+            date: n.created_at,
+            read: false,
+          })),
+        );
+      }
+    } catch (err) {
+      console.error("Error fetching notifications:", err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchNotifications();
+  }, []);
+
+  const navItems = [
+    { icon: LayoutDashboard, label: "Overview", path: "/dashboard" },
+    {
+      icon: Activity,
+      label: "Real-Time Monitoring",
+      path: "/dashboard/monitoring",
+    },
+    {
+      icon: Zap,
+      label: "Inverters & Controllers",
+      path: "/dashboard/inverters",
+    },
+    { icon: Battery, label: "Battery Management", path: "/dashboard/battery" },
+    { icon: CloudSun, label: "Weather Station", path: "/dashboard/weather" },
+    {
+      icon: Bell,
+      label: "Alarms & Notifications",
+      path: "/dashboard/alarms",
+      badge: unreadCount,
+    },
+    {
+      icon: FileText,
+      label: "Reports & Analytics",
+      path: "/dashboard/reports",
+    },
+    { icon: Shield, label: "Admin Management", path: "/dashboard/admin" },
+    { icon: Wrench, label: "Maintenance Logs", path: "/dashboard/maintenance" },
+    { icon: Settings, label: "Settings", path: "/dashboard/settings" },
+    { icon: Info, label: "About / Help", path: "/dashboard/about" },
+  ];
   const filtered = navItems.filter(
     (item) => !(user?.role === "Engineer" && item.path === "/dashboard/admin"),
   );
@@ -268,14 +309,15 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
             </button>
 
             {/* Bell */}
-            <button
+            <a
+              href="/dashboard/alarms"
               className="w-9 h-9 rounded-xl flex items-center justify-center relative
                                bg-secondary hover:bg-muted border border-border
                                text-muted-foreground hover:text-foreground transition-smooth"
             >
               <Bell className="w-4 h-4" />
               <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-destructive border-2 border-card" />
-            </button>
+            </a>
 
             <div className="w-px h-7 bg-border mx-1" />
 

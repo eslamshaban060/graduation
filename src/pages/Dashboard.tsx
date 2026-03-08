@@ -378,7 +378,7 @@ export default function Dashboard() {
   /* ═══════════════════════════════════════════ */
   return (
     <DashboardLayout>
-      <div className="min-h-screen bg-background overflow-x-hidden">
+      <div className="min-h-screen  bg-background overflow-x-hidden">
         {/* bg blobs */}
         <div className="fixed inset-0 pointer-events-none -z-0 overflow-hidden">
           <div
@@ -391,7 +391,7 @@ export default function Dashboard() {
           />
         </div>
 
-        <div className="relative max-w-5xl mx-auto px-4 sm:px-6 py-8 space-y-5">
+        <div className="relative max-w-6xl mx-auto px-4 sm:px-6 py-8 space-y-5">
           {/* ══ HERO ══ */}
           <motion.div
             {...fade(0)}

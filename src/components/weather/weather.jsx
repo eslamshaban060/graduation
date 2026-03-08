@@ -55,11 +55,11 @@ const WeatherStation2 = () => {
       setLoading(true);
 
       const currentResponse = await fetch(
-        `https://api.openweathermap.org/data/2.5/weather?lat=${MINYA_LAT}&lon=${MINYA_LON}&appid=${API_KEY}&units=metric`
+        `https://api.openweathermap.org/data/2.5/weather?lat=${MINYA_LAT}&lon=${MINYA_LON}&appid=${API_KEY}&units=metric`,
       );
 
       const forecastResponse = await fetch(
-        `https://api.openweathermap.org/data/2.5/forecast?lat=${MINYA_LAT}&lon=${MINYA_LON}&appid=${API_KEY}&units=metric`
+        `https://api.openweathermap.org/data/2.5/forecast?lat=${MINYA_LAT}&lon=${MINYA_LON}&appid=${API_KEY}&units=metric`,
       );
 
       if (!currentResponse.ok || !forecastResponse.ok) {
@@ -223,11 +223,11 @@ const WeatherStation2 = () => {
             <AlertDescription className="text-yellow-900 dark:text-yellow-100 font-medium">
               {weather.main.temp > 35 &&
                 `🌡️ High Temperature Alert: ${weather.main.temp.toFixed(
-                  1
+                  1,
                 )}°C - Panel efficiency reduced. `}
               {weather.wind.speed > 15 &&
                 `💨 Strong Winds: ${weather.wind.speed.toFixed(
-                  1
+                  1,
                 )} m/s - Monitor equipment. `}
               {weather.clouds.all > 70 &&
                 `☁️ Heavy Cloud Cover: ${weather.clouds.all}% - Reduced solar output.`}
@@ -347,8 +347,8 @@ const WeatherStation2 = () => {
                     {weather.wind.speed < 10
                       ? "Low"
                       : weather.wind.speed < 15
-                      ? "Medium"
-                      : "High"}
+                        ? "Medium"
+                        : "High"}
                   </span>
                 </div>
                 <div className="w-full h-2 bg-secondary rounded-full overflow-hidden">
@@ -357,7 +357,7 @@ const WeatherStation2 = () => {
                     style={{
                       width: `${Math.min(
                         100,
-                        (weather.wind.speed / 20) * 100
+                        (weather.wind.speed / 20) * 100,
                       )}%`,
                       backgroundColor: windColor,
                     }}
@@ -392,8 +392,8 @@ const WeatherStation2 = () => {
                   {weather.main.humidity > 80
                     ? "⚠️ Clean panels within 48h"
                     : weather.main.humidity > 60
-                    ? "📅 Schedule cleaning soon"
-                    : "✅ Normal maintenance"}
+                      ? "📅 Schedule cleaning soon"
+                      : "✅ Normal maintenance"}
                 </div>
               </div>
             </div>
@@ -556,45 +556,14 @@ const WeatherStation2 = () => {
                         entry.clouds > 70
                           ? "#ef4444"
                           : entry.clouds > 40
-                          ? "#eab308"
-                          : "#22c55e"
+                            ? "#eab308"
+                            : "#22c55e"
                       }
                     />
                   ))}
                 </Bar>
               </BarChart>
             </ResponsiveContainer>
-          </Card>
-        </div>
-
-        {/* Additional Metrics */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <Card className="p-4 bg-gradient-to-br from-card to-card/50 text-center">
-            <Gauge className="w-6 h-6 text-primary mx-auto mb-2" />
-            <div className="text-2xl font-bold">{weather.main.pressure}</div>
-            <div className="text-xs text-muted-foreground">hPa Pressure</div>
-          </Card>
-
-          <Card className="p-4 bg-gradient-to-br from-card to-card/50 text-center">
-            <Eye className="w-6 h-6 text-primary mx-auto mb-2" />
-            <div className="text-2xl font-bold">
-              {(weather.visibility / 1000).toFixed(1)}
-            </div>
-            <div className="text-xs text-muted-foreground">km Visibility</div>
-          </Card>
-
-          <Card className="p-4 bg-gradient-to-br from-card to-card/50 text-center">
-            <CloudSun className="w-6 h-6 text-primary mx-auto mb-2" />
-            <div className="text-2xl font-bold capitalize">
-              {weather.weather[0].main}
-            </div>
-            <div className="text-xs text-muted-foreground">Condition</div>
-          </Card>
-
-          <Card className="p-4 bg-gradient-to-br from-card to-card/50 text-center">
-            <Battery className="w-6 h-6 text-primary mx-auto mb-2" />
-            <div className="text-2xl font-bold">{efficiency.toFixed(0)}%</div>
-            <div className="text-xs text-muted-foreground">Efficiency</div>
           </Card>
         </div>
       </div>
