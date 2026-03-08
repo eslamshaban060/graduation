@@ -30,8 +30,6 @@ import DashboardLayout from "@/components/DashboardLayout";
 /* ─── CONFIG ─────────────────────────────── */
 const API_SYSTEM =
   "https://5f88kivgsg.execute-api.eu-west-3.amazonaws.com/API-system_summary";
-const API_SOLAR =
-  "https://5qo8xe66p8.execute-api.eu-west-3.amazonaws.com/solar";
 const WEATHER_KEY = "bdeb06fa12b44fa44b843321dc99e5b2";
 const LAT = 28.0871,
   LON = 30.7618;
@@ -61,13 +59,6 @@ const safeFetch = async (url) => {
   } catch (e) {
     return { ok: false, error: e.message };
   }
-};
-
-const latestOf = (arr) => {
-  if (!Array.isArray(arr) || !arr.length) return null;
-  return arr.reduce((a, b) =>
-    new Date(a.Timestamp) > new Date(b.Timestamp) ? a : b,
-  );
 };
 
 const calcWeatherScore = (clouds = 0, temp = 25, rain = 0) => {
@@ -224,54 +215,48 @@ export default function RealtimeMonitoring() {
   const [system, setSystem] = useState(null);
   const [systemErr, setSystemErr] = useState(null);
   const [loadingSys, setLoadingSys] = useState(true);
-
-  // ✅ كل الـ history من الـ API دفعة واحدة
-  const [powerHistory, setPowerHistory] = useState([]);
-  const [loadingChart, setLoadingChart] = useState(true);
-
+  const [powerHistory, setPowerHistory] = useState([]); // ✅ كل الـ records من الـ API
   const [impactData, setImpactData] = useState([]);
   const [lastSync, setLastSync] = useState(null);
   const [alerts, setAlerts] = useState([]);
   const [currentWx, setCurrentWx] = useState(null);
 
-  /* ─────────────────────────────────────────
+  /* ══════════════════════════════════════════
      fetchSystem
-     - جيب كل الـ records من الـ API
-     - رتّبهم بالـ Timestamp
-     - ابني الـ powerHistory من كلهم
-     - خزّن آخر record في system (للـ KPI cards)
-  ───────────────────────────────────────── */
+     - جيب كل الـ array من الـ API
+     - رتّبهم تصاعدياً بالـ Timestamp
+     - ابني powerHistory من كلهم (آخر 40)
+     - آخر record → system (KPI cards)
+  ══════════════════════════════════════════ */
   const fetchSystem = useCallback(async () => {
     setLoadingSys(true);
-    setLoadingChart(true);
 
     const { ok, data, error } = await safeFetch(API_SYSTEM);
 
     if (!ok) {
       setSystemErr(error);
       setLoadingSys(false);
-      setLoadingChart(false);
       return;
     }
 
+    // ✅ الـ API بيرجع array — رتّبها بالوقت
     const arr = (Array.isArray(data) ? data : [data])
       .filter((r) => r?.Timestamp)
-      .sort((a, b) => new Date(a.Timestamp) - new Date(b.Timestamp)); // ترتيب تصاعدي
+      .sort((a, b) => new Date(a.Timestamp) - new Date(b.Timestamp));
 
     if (!arr.length) {
       setSystemErr("No data returned");
       setLoadingSys(false);
-      setLoadingChart(false);
       return;
     }
 
-    // ✅ آخر record للـ KPI cards
+    // آخر record للـ KPI cards
     const snap = arr[arr.length - 1];
     setSystem(snap);
     setSystemErr(null);
     setLastSync(new Date());
 
-    // ✅ كل الـ records للـ chart — آخر 40 نقطة عشان محدش يتزحمش
+    // ✅ كل الـ records للـ chart (آخر 40 عشان الـ chart ميتزحمش)
     const history = arr.slice(-40).map((r) => ({
       time: fmtTs(r.Timestamp) ?? "",
       acPower: r.Total_AC_PanelPower ?? 0,
@@ -280,16 +265,17 @@ export default function RealtimeMonitoring() {
 
     setPowerHistory(history);
     setLoadingSys(false);
-    setLoadingChart(false);
   }, []);
 
-  /* ─── fetch solar + weather → impact chart ─── */
+  /* ── fetch system + weather → impact chart ──
+     نفس الـ API_SYSTEM بس بنربط كل record بالـ weather score بتاعه
+  ── */
   const fetchImpact = useCallback(async () => {
     const todayMidnight = new Date();
     todayMidnight.setHours(0, 0, 0, 0);
 
-    const [solarRes, wxRes, foreRes] = await Promise.all([
-      safeFetch(API_SOLAR),
+    const [systemRes, wxRes, foreRes] = await Promise.all([
+      safeFetch(API_SYSTEM),
       safeFetch(
         `https://api.openweathermap.org/data/2.5/weather?lat=${LAT}&lon=${LON}&appid=${WEATHER_KEY}&units=metric`,
       ),
@@ -303,6 +289,7 @@ export default function RealtimeMonitoring() {
 
     const foreList = foreRes.ok ? (foreRes.data?.list ?? []) : [];
 
+    // أقرب forecast لأي timestamp
     const nearestFore = (ts) => {
       if (!foreList.length) return null;
       const t = new Date(ts).getTime();
@@ -311,35 +298,40 @@ export default function RealtimeMonitoring() {
       );
     };
 
-    const solarArr =
-      solarRes.ok && Array.isArray(solarRes.data)
-        ? solarRes.data.filter((r) => new Date(r.Timestamp) >= todayMidnight)
+    // ✅ نفس بيانات الـ Power Trend — بس بنضيف weatherScore لكل نقطة
+    const systemArr =
+      systemRes.ok && Array.isArray(systemRes.data)
+        ? systemRes.data
+            .filter(
+              (r) => r?.Timestamp && new Date(r.Timestamp) >= todayMidnight,
+            )
+            .sort((a, b) => new Date(a.Timestamp) - new Date(b.Timestamp))
+            .slice(-40)
         : [];
 
-    const pastPoints = solarArr.map((r) => {
+    const pastPoints = systemArr.map((r) => {
       const fore = nearestFore(r.Timestamp);
       const clouds = fore?.clouds?.all ?? wx?.clouds?.all ?? 0;
       const temp = fore?.main?.temp ?? wx?.main?.temp ?? 25;
       const rain = fore?.rain?.["3h"] ?? wx?.rain?.["1h"] ?? 0;
-      const score = Math.round(calcWeatherScore(clouds, temp, rain));
       return {
         time: fmtTs(r.Timestamp) ?? "",
-        solarPower: r.SolarPower ?? 0,
-        weatherScore: score,
+        acPower: r.Total_AC_PanelPower ?? 0, // ✅ نفس field الـ Power Trend
+        weatherScore: Math.round(calcWeatherScore(clouds, temp, rain)),
         clouds,
         temp: Math.round(temp),
       };
     });
 
+    // نقاط مستقبلية من الـ forecast (بدون قراءة باور حقيقية)
     const futurePoints = foreList.slice(0, 5).map((s) => {
       const clouds = s.clouds?.all ?? 0;
       const temp = s.main?.temp ?? 25;
       const rain = s.rain?.["3h"] ?? 0;
-      const score = Math.round(calcWeatherScore(clouds, temp, rain));
       return {
         time: fmtTs(new Date(s.dt * 1000).toISOString()) ?? "",
-        solarPower: null,
-        weatherScore: score,
+        acPower: null,
+        weatherScore: Math.round(calcWeatherScore(clouds, temp, rain)),
         clouds,
         temp: Math.round(temp),
         forecast: true,
@@ -585,13 +577,12 @@ export default function RealtimeMonitoring() {
               boxShadow: "var(--shadow-card)",
             }}
           >
-            {/* Header */}
             <div className="flex items-center justify-between mb-1 flex-wrap gap-2">
               <div>
                 <p className="text-sm font-bold text-foreground">Power Trend</p>
                 <p className="text-[11px] text-muted-foreground">
                   AC & DC output —{" "}
-                  {loadingChart
+                  {loadingSys
                     ? "loading..."
                     : `${powerHistory.length} readings`}
                 </p>
@@ -621,8 +612,7 @@ export default function RealtimeMonitoring() {
               </span>
             </div>
 
-            {/* Chart or skeleton */}
-            {loadingChart ? (
+            {loadingSys ? (
               <Skel className="h-[200px]" />
             ) : powerHistory.length < 2 ? (
               <div
@@ -793,7 +783,7 @@ export default function RealtimeMonitoring() {
                       className="w-2 h-2 rounded-full"
                       style={{ background: "hsl(var(--primary))" }}
                     />
-                    Solar Power (W)
+                    AC Power (W)
                   </span>
                   <span className="flex items-center gap-1.5">
                     <span
@@ -844,6 +834,7 @@ export default function RealtimeMonitoring() {
                       }}
                       tickLine={false}
                       axisLine={false}
+                      interval="preserveStartEnd"
                     />
                     <YAxis
                       yAxisId="power"
@@ -866,10 +857,11 @@ export default function RealtimeMonitoring() {
                       axisLine={false}
                     />
                     <Tooltip content={<ChartTip />} />
+                    {/* ✅ acPower من API_SYSTEM — نفس مصدر الـ Power Trend */}
                     <Bar
                       yAxisId="power"
-                      dataKey="solarPower"
-                      name="Solar Power"
+                      dataKey="acPower"
+                      name="AC Power"
                       fill="hsl(var(--primary))"
                       fillOpacity={0.7}
                       radius={[4, 4, 0, 0]}
@@ -894,7 +886,7 @@ export default function RealtimeMonitoring() {
                     0.5) − (rain ? 15 : 0)
                   </span>
                   <span className="ml-auto">
-                    Bars = real measurements · Line = weather score
+                    Bars = AC Power · Line = weather score
                   </span>
                 </div>
               </motion.div>
