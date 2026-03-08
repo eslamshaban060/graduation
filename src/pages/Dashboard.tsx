@@ -190,7 +190,6 @@ const SC = {
 
 function StatusDot({ s }) {
   return (
-    // <DashboardLayout>
     <span className="relative flex w-2.5 h-2.5 shrink-0">
       {s !== "idle" && (
         <span
@@ -203,7 +202,6 @@ function StatusDot({ s }) {
         style={{ background: SC[s] }}
       />
     </span>
-    // </DashboardLayout>
   );
 }
 
@@ -211,22 +209,20 @@ function ChartTip({ active, payload, label }) {
   if (!active || !payload?.length) return null;
   const kwh = payload[0].value;
   return (
-    <DashboardLayout>
-      <div
-        className="rounded-xl px-3 py-2.5 text-xs space-y-1"
-        style={{
-          background: "hsl(var(--card))",
-          border: "1px solid hsl(var(--border))",
-          boxShadow: "var(--shadow-card)",
-        }}
-      >
-        <p className="text-muted-foreground font-medium">{label}</p>
-        <p className="font-bold text-foreground">{f1(kwh)} kWh</p>
-        <p style={{ color: "hsl(var(--accent))" }}>
-          {egp(kwh * PRICE_PER_KWH)}
-        </p>
-      </div>
-    </DashboardLayout>
+    // <DashboardLayout>
+    <div
+      className="rounded-xl px-3 py-2.5 text-xs space-y-1"
+      style={{
+        background: "hsl(var(--card))",
+        border: "1px solid hsl(var(--border))",
+        boxShadow: "var(--shadow-card)",
+      }}
+    >
+      <p className="text-muted-foreground font-medium">{label}</p>
+      <p className="font-bold text-foreground">{f1(kwh)} kWh</p>
+      <p style={{ color: "hsl(var(--accent))" }}>{egp(kwh * PRICE_PER_KWH)}</p>
+    </div>
+    // </DashboardLayout>
   );
 }
 
