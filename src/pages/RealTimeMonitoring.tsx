@@ -11,7 +11,6 @@ import {
   Clock,
   AlertTriangle,
   Sun,
-  Cloud,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -25,9 +24,9 @@ import {
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
-  Legend,
 } from "recharts";
 import DashboardLayout from "@/components/DashboardLayout";
+
 /* ─── CONFIG ─────────────────────────────── */
 const API_SYSTEM =
   "https://5f88kivgsg.execute-api.eu-west-3.amazonaws.com/API-system_summary";
@@ -41,6 +40,7 @@ const WEATHER_MS = 600_000;
 
 /* ─── HELPERS ────────────────────────────── */
 const fmt = (v, d = 1) => (v == null || isNaN(v) ? "—" : Number(v).toFixed(d));
+
 const fmtTs = (ts) => {
   if (!ts) return null;
   try {
@@ -70,19 +70,6 @@ const latestOf = (arr) => {
   );
 };
 
-/**
- * weatherImpactScore — single 0–100 score representing how much
- * current weather conditions reduce solar output.
- *
- * Formula:
- *   base = 100
- *   - cloud penalty  : clouds% × 0.7        (clouds block irradiance directly)
- *   - heat penalty   : max(0, temp-25) × 0.5 (panels lose ~0.5%/°C above 25°C)
- *   - rain penalty   : if rain > 0 → −15
- *   clamp to [0, 100]
- *
- * Score = effective solar output % relative to ideal clear-sky condition.
- */
 const calcWeatherScore = (clouds = 0, temp = 25, rain = 0) => {
   const cloudPenalty = clouds * 0.7;
   const heatPenalty = Math.max(0, temp - 25) * 0.5;
@@ -93,7 +80,6 @@ const calcWeatherScore = (clouds = 0, temp = 25, rain = 0) => {
   );
 };
 
-/* score → label + color */
 const scoreInfo = (score) => {
   if (score >= 75) return { label: "Optimal", color: "hsl(var(--primary))" };
   if (score >= 50) return { label: "Good", color: "hsl(var(--primary-glow))" };
@@ -238,42 +224,66 @@ export default function RealtimeMonitoring() {
   const [system, setSystem] = useState(null);
   const [systemErr, setSystemErr] = useState(null);
   const [loadingSys, setLoadingSys] = useState(true);
-  const [powerHistory, setPowerHistory] = useState([]); // { time, acPower, dcPower }
-  const [impactData, setImpactData] = useState([]); // { time, solarPower, weatherScore, clouds, temp }
+
+  // ✅ كل الـ history من الـ API دفعة واحدة
+  const [powerHistory, setPowerHistory] = useState([]);
+  const [loadingChart, setLoadingChart] = useState(true);
+
+  const [impactData, setImpactData] = useState([]);
   const [lastSync, setLastSync] = useState(null);
   const [alerts, setAlerts] = useState([]);
-  const [currentWx, setCurrentWx] = useState(null); // latest weather snapshot
+  const [currentWx, setCurrentWx] = useState(null);
 
-  /* ── fetch system + build power history ── */
+  /* ─────────────────────────────────────────
+     fetchSystem
+     - جيب كل الـ records من الـ API
+     - رتّبهم بالـ Timestamp
+     - ابني الـ powerHistory من كلهم
+     - خزّن آخر record في system (للـ KPI cards)
+  ───────────────────────────────────────── */
   const fetchSystem = useCallback(async () => {
     setLoadingSys(true);
+    setLoadingChart(true);
+
     const { ok, data, error } = await safeFetch(API_SYSTEM);
+
     if (!ok) {
       setSystemErr(error);
       setLoadingSys(false);
+      setLoadingChart(false);
       return;
     }
 
-    const arr = Array.isArray(data) ? data : [data];
-    const snap = latestOf(arr);
+    const arr = (Array.isArray(data) ? data : [data])
+      .filter((r) => r?.Timestamp)
+      .sort((a, b) => new Date(a.Timestamp) - new Date(b.Timestamp)); // ترتيب تصاعدي
+
+    if (!arr.length) {
+      setSystemErr("No data returned");
+      setLoadingSys(false);
+      setLoadingChart(false);
+      return;
+    }
+
+    // ✅ آخر record للـ KPI cards
+    const snap = arr[arr.length - 1];
     setSystem(snap);
     setSystemErr(null);
     setLastSync(new Date());
 
-    if (snap) {
-      setPowerHistory((prev) => {
-        const point = {
-          time: fmtTs(snap.Timestamp) ?? new Date().toLocaleTimeString(),
-          acPower: snap.Total_AC_PanelPower ?? 0,
-          dcPower: snap.Total_DC_PanelPower ?? 0,
-        };
-        return [...prev, point].slice(-20);
-      });
-    }
+    // ✅ كل الـ records للـ chart — آخر 40 نقطة عشان محدش يتزحمش
+    const history = arr.slice(-40).map((r) => ({
+      time: fmtTs(r.Timestamp) ?? "",
+      acPower: r.Total_AC_PanelPower ?? 0,
+      dcPower: r.Total_DC_PanelPower ?? 0,
+    }));
+
+    setPowerHistory(history);
     setLoadingSys(false);
+    setLoadingChart(false);
   }, []);
 
-  /* ── fetch solar + weather → build impact chart ── */
+  /* ─── fetch solar + weather → impact chart ─── */
   const fetchImpact = useCallback(async () => {
     const todayMidnight = new Date();
     todayMidnight.setHours(0, 0, 0, 0);
@@ -291,14 +301,6 @@ export default function RealtimeMonitoring() {
     const wx = wxRes.ok ? wxRes.data : null;
     setCurrentWx(wx);
 
-    /* ── Build impact timeline ──────────────────────
-       Each point = one solar reading paired with the
-       weather conditions at that timestamp.
-
-       For past readings we approximate weather from
-       the forecast list (nearest dt) or fall back to
-       current weather if no forecast available.
-    ──────────────────────────────────────────────── */
     const foreList = foreRes.ok ? (foreRes.data?.list ?? []) : [];
 
     const nearestFore = (ts) => {
@@ -329,7 +331,6 @@ export default function RealtimeMonitoring() {
       };
     });
 
-    /* Add future forecast points (next 5 slots) */
     const futurePoints = foreList.slice(0, 5).map((s) => {
       const clouds = s.clouds?.all ?? 0;
       const temp = s.main?.temp ?? 25;
@@ -337,7 +338,7 @@ export default function RealtimeMonitoring() {
       const score = Math.round(calcWeatherScore(clouds, temp, rain));
       return {
         time: fmtTs(new Date(s.dt * 1000).toISOString()) ?? "",
-        solarPower: null, // future — no real measurement
+        solarPower: null,
         weatherScore: score,
         clouds,
         temp: Math.round(temp),
@@ -347,7 +348,6 @@ export default function RealtimeMonitoring() {
 
     setImpactData([...pastPoints, ...futurePoints]);
 
-    /* ── alerts ── */
     if (wx) {
       const newAlerts = [];
       const clouds = wx.clouds?.all ?? 0;
@@ -374,7 +374,6 @@ export default function RealtimeMonitoring() {
     };
   }, [fetchSystem, fetchImpact]);
 
-  /* current weather score */
   const currentScore = currentWx
     ? Math.round(
         calcWeatherScore(
@@ -386,7 +385,7 @@ export default function RealtimeMonitoring() {
     : null;
   const scoreStyle = currentScore != null ? scoreInfo(currentScore) : null;
 
-  /* ─────────────────────────────────────────── */
+  /* ────────────────────────────────────────── */
   return (
     <DashboardLayout>
       <div className="min-h-screen bg-background">
@@ -575,50 +574,64 @@ export default function RealtimeMonitoring() {
           </div>
 
           {/* ══ POWER TREND ══ */}
-          {powerHistory.length > 1 && (
-            <motion.div
-              initial={{ opacity: 0, y: 14 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3 }}
-              className="rounded-2xl p-5"
-              style={{
-                background: "hsl(var(--card))",
-                border: "1px solid hsl(var(--border))",
-                boxShadow: "var(--shadow-card)",
-              }}
-            >
-              <div className="flex items-center justify-between mb-1">
-                <div>
-                  <p className="text-sm font-bold text-foreground">
-                    Power Trend
-                  </p>
-                  <p className="text-[11px] text-muted-foreground">
-                    AC & DC output — last {powerHistory.length} readings
-                  </p>
-                </div>
-                <div className="flex items-center gap-4 text-[11px] text-muted-foreground">
-                  <span className="flex items-center gap-1.5">
-                    <span
-                      className="w-2 h-2 rounded-full"
-                      style={{ background: "hsl(var(--primary))" }}
-                    />
-                    AC (W)
-                  </span>
-                  <span className="flex items-center gap-1.5">
-                    <span
-                      className="w-2 h-2 rounded-full"
-                      style={{ background: "hsl(var(--accent))" }}
-                    />
-                    DC (W)
-                  </span>
-                </div>
+          <motion.div
+            initial={{ opacity: 0, y: 14 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3 }}
+            className="rounded-2xl p-5"
+            style={{
+              background: "hsl(var(--card))",
+              border: "1px solid hsl(var(--border))",
+              boxShadow: "var(--shadow-card)",
+            }}
+          >
+            {/* Header */}
+            <div className="flex items-center justify-between mb-1 flex-wrap gap-2">
+              <div>
+                <p className="text-sm font-bold text-foreground">Power Trend</p>
+                <p className="text-[11px] text-muted-foreground">
+                  AC & DC output —{" "}
+                  {loadingChart
+                    ? "loading..."
+                    : `${powerHistory.length} readings`}
+                </p>
               </div>
-              <div className="flex items-center gap-1.5 mb-4">
-                <PulseDot />
-                <span className="text-[10px] text-muted-foreground">
-                  Updates every {REFRESH_MS / 1000}s
+              <div className="flex items-center gap-4 text-[11px] text-muted-foreground">
+                <span className="flex items-center gap-1.5">
+                  <span
+                    className="w-2 h-2 rounded-full"
+                    style={{ background: "hsl(var(--primary))" }}
+                  />
+                  AC (W)
+                </span>
+                <span className="flex items-center gap-1.5">
+                  <span
+                    className="w-2 h-2 rounded-full"
+                    style={{ background: "hsl(var(--accent))" }}
+                  />
+                  DC (W)
                 </span>
               </div>
+            </div>
+
+            <div className="flex items-center gap-1.5 mb-4">
+              <PulseDot />
+              <span className="text-[10px] text-muted-foreground">
+                Auto-refresh every {REFRESH_MS / 1000}s
+              </span>
+            </div>
+
+            {/* Chart or skeleton */}
+            {loadingChart ? (
+              <Skel className="h-[200px]" />
+            ) : powerHistory.length < 2 ? (
+              <div
+                className="h-[200px] flex items-center justify-center rounded-xl text-sm text-muted-foreground"
+                style={{ background: "hsl(var(--muted))" }}
+              >
+                Not enough data points yet
+              </div>
+            ) : (
               <ResponsiveContainer width="100%" height={200}>
                 <AreaChart
                   data={powerHistory}
@@ -662,6 +675,7 @@ export default function RealtimeMonitoring() {
                     }}
                     tickLine={false}
                     axisLine={false}
+                    interval="preserveStartEnd"
                   />
                   <YAxis
                     tick={{
@@ -692,8 +706,8 @@ export default function RealtimeMonitoring() {
                   />
                 </AreaChart>
               </ResponsiveContainer>
-            </motion.div>
-          )}
+            )}
+          </motion.div>
 
           {/* ══ WEATHER IMPACT ON SOLAR ══ */}
           <div>
@@ -720,7 +734,6 @@ export default function RealtimeMonitoring() {
                 </div>
               </div>
 
-              {/* Current score badge */}
               {scoreStyle && (
                 <motion.div
                   initial={{ opacity: 0, scale: 0.9 }}
@@ -832,7 +845,6 @@ export default function RealtimeMonitoring() {
                       tickLine={false}
                       axisLine={false}
                     />
-                    {/* Left axis — Solar Power (W) */}
                     <YAxis
                       yAxisId="power"
                       tick={{
@@ -842,7 +854,6 @@ export default function RealtimeMonitoring() {
                       tickLine={false}
                       axisLine={false}
                     />
-                    {/* Right axis — Weather Score 0–100 */}
                     <YAxis
                       yAxisId="score"
                       orientation="right"
@@ -855,8 +866,6 @@ export default function RealtimeMonitoring() {
                       axisLine={false}
                     />
                     <Tooltip content={<ChartTip />} />
-
-                    {/* Solar power bars (actual readings) */}
                     <Bar
                       yAxisId="power"
                       dataKey="solarPower"
@@ -865,8 +874,6 @@ export default function RealtimeMonitoring() {
                       fillOpacity={0.7}
                       radius={[4, 4, 0, 0]}
                     />
-
-                    {/* Weather score line */}
                     <Line
                       yAxisId="score"
                       type="monotone"
@@ -881,7 +888,6 @@ export default function RealtimeMonitoring() {
                   </ComposedChart>
                 </ResponsiveContainer>
 
-                {/* Legend note */}
                 <div className="mt-3 pt-3 border-t border-border flex flex-wrap gap-x-5 gap-y-1 text-[10px] text-muted-foreground">
                   <span>
                     Formula: Score = 100 − (clouds% × 0.7) − (max(0, temp−25) ×
